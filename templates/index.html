@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>LetsHack</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+
+  <!-- Bootstrap core CSS-->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template-->
+  <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Page level plugin CSS-->
+  <link href="static/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+
+
+  <!-- Custom styles for this template-->
+  <link href="static/css/sb-admin.css" rel="stylesheet">
+  <style>
+    .navcustom {
+      width: 100%;
+      text-align: center;
+
+    }
+  </style>
+
+
+  <script type="text/javascript" charset="utf-8">
+
+    var socket = io.connect('http://localhost:5000');
+
+  </script>
+
+</head>
+
+<body id="page-top">
+
+  <nav class="navbar fixed-top navbar-dark bg-dark ">
+    <a class="navbar-brand mr-1" href="index.html">
+      <i class="fas fa-laptop-code"></i> LetsHack</a>
+      <h4 type="button" id="test" class="btn btn-primary btn-md" id="toggle" style="position: absolute; right:2%;margin-top: 8px;">Change to Bot Mode</h4>
+    
+    <div class="navcustom nav-link " style="position: relative;">
+      </div>
+  </nav>
+<br>
+<br>
+<br>
+
+  <div id="wrapper">
+    <div id="content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-4">
+            <div class="card card-login " style="width:450px;position: fixed;top:14%;box-shadow: 3px 2px 6px #ebebe0" id="manual">
+              <!--<div class="card-header bg-dark "style="color:white;" ><i class="fas fa-user"></i> Manual</div>
+              -->
+              <div class="card-body">
+                <div class="text-center m-1">
+                  <h4>
+                    <i class="fas fa-user"></i> Manual </h4>
+                  <p> You Can Choose Your Options Manualy to get Results.</p>
+                </div>
+
+                <form id="manualForm">
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Select Caterogy</label>
+                    <select name="f1" class="form-control" id="exampleFormControlSelect1">
+                      <option value="" hidden>nan</option>
+                      <option value="State" selected>State</option>
+                      <option value="District">District</option>
+                      <option value="Nation">Nation</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group " id="State">
+                    <label for="exampleFormControlSelect1">Select Values</label>
+                    <select name="f2" class="form-control" id="StateValue">
+                      <option value="" hidden> None</option>
+                      <option value="ANDAMAN & NICOBAR ISLANDS">ANDAMAN & NICOBAR ISLANDS</option>
+                      {% for option in catagory[1] %}
+                      <option value="{{ option }}">{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="form-group" id="District">
+                    <label for="exampleFormControlSelect1">Select Values</label>
+                    <select name="f3" class="form-control" id="DistrictValue">
+                      <option value="" hidden> None</option>
+                      <option value="NICOBARS">NICOBARS</option>
+                      {% for option in catagory[2] %}
+                      <option value="{{ option }}">{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+
+
+
+
+
+                  <div class="form-group" id="columns">
+                    <label for="exampleFormControlSelect2">Select Columns</label>
+                    <select name="f5[]" class="form-control" id="columns_sel">
+                      <option value="" hidden> None</option>
+
+                      {% for option in catagory[0] %}
+                      <option value="{{ option }}">{{ option }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div id="ac">
+                  </div>
+                  <center>
+                    <hr>
+                    <label for="">Column Name & Methods</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Column Name" id="colname" aria-label="Text input with dropdown button">
+                      <div class="input-group-append">
+                        <select name="f5[]" class="form-control" id="operator">
+                          <option value="" hidden>Methods</option>
+                          <option value="Correlation">Correlation</option>
+                          <option value="Add">Add</option>
+                          <option value="Sub">Subtract</option>
+                          <option value="Mul">Multiplication</option>
+                          <option value="Div">Division</option>
+                        </select>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                      <label for="">Select Columns</label>
+                      <select name="f5[]" class="form-control" id="columns_sel2">
+                        <option value="none" hidden> None</option>
+                        {% for option in catagory[0] %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <br>
+
+                  </center>
+                </form>
+              </div>
+            </div>
+            <div class="card card-login " style="box-shadow: 3px 2px 6px #ebebe0" id="bot">
+              <div class="text-center m-4">
+                <h4>
+                  <i class="fas fa-robot"></i> LetsBot </h4>
+                <p> You can get Results with NLP Based Bot by Asking Him in your way.</p>
+              </div>
+              <div class="form-label-group">
+                <input type="text" id="bottext" class="form-control" placeholder="Ask me Something...">
+                <label for="bottext">
+                  <i class="fas fa-robot"></i> Ask me Something...</label>
+              </div>
+              <div class="text-center m-4" id="ressugg">
+                <h5>
+                  <i class="fas fa-robot"></i> -- If you meant some other parameter -- </h5>
+                <p> You can get Results with NLP Based Bot by Asking Him in your way.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-8">
+            <!-- Area Chart Example-->
+            <div class="card " id="Description" style="box-shadow: 3px 2px 6px #ebebe0;margin-bottom:20px;">
+              <div class="card-body charty-area">
+                  <div class="text-center m-1">
+                      <h3><i class="fas fa-check-circle text-success"></i> Result </h3>
+                      <h5><p id="Dpt"></p></h5>
+                    </div>
+              </div>
+            </div>
+            <div class="card " id="error" style="box-shadow: 3px 2px 6px #ebebe0">
+              <div class="card-body charty-area">
+                  <div class="text-center m-1">
+                      <h3><i class="fas fa-info-circle text-danger"></i> Not Available !</h3>     
+                      <h5><p> Sorry the Data you are Looking for is  <b>Not Available</b> on Dataset !</p></h5>
+                    </div>
+              </div>
+            </div>
+            <div class="card " id="caution" style="box-shadow: 3px 2px 6px #ebebe0">
+              <div class="card-body charty-area">
+                  <div class="text-center m-1">
+                      <h3><i class="fas fa-exclamation-triangle text-warning"></i> Bad Configration !</h3>     
+                      <h5><p> Please Check the Configration Again. You are missing Something.  </p></h5>
+                    </div>
+              </div>
+            </div>
+            
+            <div class="card mb-3 reschart" style="box-shadow: 3px 1px 6px #ebebe0">
+              <div class="card-body " >
+                <canvas id="myChart" width="80%" height="40"></canvas>      
+              </div>
+            </div>
+            <br>
+            <div class="card mb-3" id="TableDiv">
+              <div class="card-body" style="padding:0px;">
+                <div class="table-responsive" >
+                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody id="TableBody">
+                      <!-- Data will be here ! -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.content-wrapper -->
+      <div style="position: absolute;height: 100%;width: 100%;top:-10%;z-index: -100">
+        <video id="bgVideo" preload="true" autoplay loop muted height="100%" width="100%">
+          <source src="static/videoplayback.webm" type="video/webm">
+        </video>
+      </div>
+    </div>
+    <!-- /#wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+
+    <script>
+      function sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+      }
+      $(document).ready(function () {
+        var bucket;
+        $("#bot").hide();
+
+        $("#exampleFormControlSelect1")[0].selectedIndex = 1;
+        $("#StateValue")[0].selectedIndex = 0;
+        $("#DistrictValue")[0].selectedIndex = 0;
+        $("#columns_sel")[0].selectedIndex = 0;
+        $("#columns_sel2")[0].selectedIndex = 0;
+        $("#operator")[0].selectedIndex = 0;
+        $("#colname").val("");
+        $("#bottext").val("");
+        $("#error").hide();
+        $("#TableDiv").hide();
+        $('#Description').hide();
+
+
+        var toggle = 0;
+        $("#test").click(function () {
+          if ($("#test").text() == "Change to Bot Mode") {
+            $("#bot").show();
+            $("#bottext").val("")
+            $("#manual").slideUp();
+            $("#test").text("Change to Manual Mode");
+            $("#exampleFormControlSelect1")[0].selectedIndex = 1;
+            $("#StateValue")[0].selectedIndex = 0;
+            $("#columns_sel")[0].selectedIndex = 0;
+            $("#columns_sel2")[0].selectedIndex = 0;
+            $("#operator")[0].selectedIndex = 0;
+            $("#colname").val("");
+            $("#ressugg").hide();
+          }
+          else {
+            bucket = ["State", "", "", "", "", ""];
+            $("#manual").slideDown();
+            $("#bot").hide();
+            $("#test").text("Change to Bot Mode");
+          }
+        });
+
+        function CreateAnswer(RawData){
+          var detail = [];
+          var sum = 0;
+          var total = RawData[0].length;
+          RawData[0].forEach(function(el)
+          {sum+=el;
+          });
+          detail[0] = sum/total;
+          detail[1] = Math.max(...RawData[0]); 
+          detail[2] = RawData[0].indexOf(Math.max(...RawData[0]));
+          return detail;
+        }
+
+        function CreateTable(RawData) {
+          var table = $('#dataTable').DataTable();
+          table.clear();
+          for (var i = 0; i < RawData[0].length; i++) {
+            table.row.add($(
+              '<tr>' + "<td><a href='#' id='RedirectAnchor' rdata=" + RawData[1][i].split(" ").join("_") + " >" + RawData[1][i] + '</a></td>' + '<td>' + RawData[0][i] + '</td>'
+            )).draw(false);
+          }
+        }
+        socket.on('connect', function () {
+
+          console.log("connect");
+        });
+        $('.reschart').hide();
+        sleep(200).then(() => {
+
+          var flag = "District"
+          socket.on('reciever', function (data) {
+            console.log(bucket);
+            $('#myChart').remove();
+            $('.reschart').append('<canvas id="myChart" width="80%" height="40"><canvas>');
+              $("#caution").hide();
+            var ctxl = $("#myChart");
+            console.log(data[0])
+              if( data[0] === "Bad Data" )
+              {
+                $("#caution").show();
+                $('#myChart').hide();
+                $('.reschart').hide();
+                $("#TableDiv").hide();
+              }
+            else if (typeof (data[0]) == typeof ("1.0")) {
+              $('#Description').show();
+              var str = data[2].split("|");
+              $('#Dpt').html('<b>'+str[0]+'</b> in '+str[1].toLowerCase()+' <b>'+str[2]+'</b> is <b>'+data[0]+'</b>.');
+              console.log(data);
+              $("#error").hide();
+              $("#TableDiv").hide();
+              $('.reschart').hide();
+            }
+            else {
+              $('#Description').hide();
+              if (data[0][0] == "-1") {
+                $("#error").show();
+                $("#caution").hide();
+                $('.reschart').hide();
+                $('#myChart').hide();
+                $("#TableDiv").hide();
+              }
+              else {
+                $("#error").hide();
+                $("#caution").hide();
+                $(".reschart").show();
+                var str = data[2].split("|");
+                if( str!="dummy" )
+                {
+                  $('#Description').show();
+                  console.log("asasa ::: "+str);
+                  var de = CreateAnswer(data);
+                  console.log(de);
+                  $('#Dpt').html('<b>'+str[0]+'</b> in '+str[1].toLowerCase()+' <b>'+str[2]+'</b> is Around <b>'+de[0].toFixed(3)+'</b> and <b>'+data[1][de[2]]+'</b> District Has the Maximum Value which is <b>'+de[1])+'</b>';
+                }
+                CreateTable(data);
+                $("#TableDiv").show();
+                var myChart = new Chart(ctxl, CreateChart(data));
+              }
+            }
+          })
+        });
+
+
+        function hideAll() {
+          $("#State").hide();
+          $("#District").hide();
+
+        }
+
+        $("#District").hide();
+
+        $("")
+
+        bucket = ["State", "", "", "", "", ""];
+        var count = 2;
+
+        $("#StateValue").change(function () {
+          bucket[1] = $(this).val();
+          $("#columns_sel")[0].selectedIndex = 0;
+          $("#columns_sel2")[0].selectedIndex = 0;
+          $("#operator")[0].selectedIndex = 0;
+          $("#colname").val("");
+        });
+
+        $("#DistrictValue").change(function () {
+          bucket[1] = $(this).val();
+          $("#columns_sel")[0].selectedIndex = 0;
+          $("#columns_sel2")[0].selectedIndex = 0;
+          $("#operator")[0].selectedIndex = 0;
+          $("#colname").val("");
+        });
+
+
+
+        $("#columns_sel").change(function () {
+          bucket[0] = $("#exampleFormControlSelect1").val()
+          bucket[2] = $(this).val();
+          if (bucket[0] == "State") {
+            bucket[1] = $("#StateValue").val();
+
+          }
+          else {
+            bucket[1] = $("#DistrictValue").val();
+
+          }
+          if (bucket[2] != "") {
+
+            socket.emit('channel', bucket);
+          }
+        });
+
+        $("#operator").change(function () {
+
+          bucket[3] = $("#colname").val();
+
+          bucket[4] = $(this).val();
+
+
+        });
+
+        $("#columns_sel2").change(function () {
+
+          bucket[0] = $("#exampleFormControlSelect1").val()
+          bucket[5] = $(this).val();
+          if (bucket[0] == "State") {
+            bucket[1] = $("#StateValue").val();
+
+          }
+          else {
+            bucket[1] = $("#DistrictValue").val();
+
+          }
+          socket.emit('channel', bucket);
+        });
+
+        $("#exampleFormControlSelect1").change(function () {
+
+          if ($(this).val() === 'State') {
+            hideAll();
+            bucket[0] = $(this).val();
+            bucket[1] = "";
+            $('#State').show();
+          }
+          else if ($(this).val() === 'District') {
+            hideAll();
+            bucket[0] = $(this).val();
+            bucket[1] = "";
+            $('#District').show();
+          }
+          else if ($(this).val() === 'Nation') {
+            hideAll();
+            bucket[0] = $(this).val();
+            bucket[1] = "";
+            console.log(bucket);
+          }
+          else {
+            hideAll();
+          }
+        });
+        $(document).on("click", "a[id='RedirectAnchor']", function (gh = bucket) {
+          if ($("#exampleFormControlSelect1").val() == "Nation") {
+            bucket[0] = "State";
+            $("#exampleFormControlSelect1").val("State");
+            $('#State').show();
+            $('#District').hide();
+            $("#StateValue").val($(this).attr("rdata").split("_").join(" "));
+
+          }
+          else if ($("#exampleFormControlSelect1").val() == "State") {
+            bucket[0] = "District";
+            $("#exampleFormControlSelect1").val("District");
+            $('#District').show();
+            $('#State').hide();
+            $("#DistrictValue").val($(this).attr("rdata").split("_").join(" "));
+          }
+          else {
+            bucket[0] = "Tier";
+          }
+          console.log($(this).attr("rdata"));
+          bucket[1] = $(this).attr("rdata").split("_").join(" ");
+          console.log("anchor :::: " + bucket);
+          socket.emit('channel', bucket);
+
+        });
+
+
+        var f = 3;
+        $("#bottext").keypress(function () {
+          if ($(this).val().split(" ").length >= f) {
+            f++;
+            socket.emit('channel', $(this).val());
+            $("#ressugg").show();
+          }
+          if ($(this).val().split(" ").length <= 3) {
+            f = 3;
+
+          }
+        });
+
+        function CreateChart(data) {
+
+          console.log(data);
+          jsonData = {
+            type: 'bar',
+            data: {
+              labels: data[1],
+              datasets: [{
+                label: data[2],
+                data: data[0],
+                backgroundColor: 'rgba(255,99,132,1)',
+                borderWidth: 1
+              }],
+
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: false
+
+                  }
+
+                }], xAxes: [{
+                  ticks: {
+                    autoSkip: false
+
+                  }
+
+                }]
+
+              },
+              animation: {
+                duration: 1500,
+                easing: 'easeInBounce',
+              }
+            }
+          }
+          return jsonData;
+        }
+
+
+      });
+
+    </script>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Page level plugin JavaScript-->
+    <script src="static/vendor/chart.js/Chart.min.js"></script>
+    <script src="static/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="static/vendor/datatables/dataTables.bootstrap4.js"></script>
+
+    <!-- Custom scripts for all pageslist(file[data])-->
+    <script src="static/js/sb-admin.min.js"></script>
+
+    <!-- Demo scripts for this page-->
+    <script src="static/js/demo/datatables-demo.js"></script>
+    <script src="static/js/demo/chart-area-demo.js"></script>
+
+
+
+
+</body>
+
+</html>
