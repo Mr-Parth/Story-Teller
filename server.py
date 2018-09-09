@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, emit, send
 import json
 import time
 import numpy as np
-from nlp import analyze, suggest
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
