@@ -38,7 +38,7 @@
 
   <script type="text/javascript" charset="utf-8">
 
-    var socket = io.connect('http://localhost:5000');
+    var socket = io.connect('http://localhost:8000');
 
   </script>
 
@@ -49,7 +49,7 @@
   <nav class="navbar fixed-top navbar-dark bg-dark ">
     <a class="navbar-brand mr-1" href="index.html">
       <i class="fas fa-laptop-code"></i> LetsHack</a>
-      <h4 type="button" id="test" class="btn btn-primary btn-md" id="toggle" style="position: absolute; right:2%;margin-top: 8px;">Change to Bot Mode</h4>
+ 
     
     <div class="navcustom nav-link " style="position: relative;">
       </div>
@@ -263,28 +263,6 @@
         $('#Description').hide();
 
 
-        var toggle = 0;
-        $("#test").click(function () {
-          if ($("#test").text() == "Change to Bot Mode") {
-            $("#bot").show();
-            $("#bottext").val("")
-            $("#manual").slideUp();
-            $("#test").text("Change to Manual Mode");
-            $("#exampleFormControlSelect1")[0].selectedIndex = 1;
-            $("#StateValue")[0].selectedIndex = 0;
-            $("#columns_sel")[0].selectedIndex = 0;
-            $("#columns_sel2")[0].selectedIndex = 0;
-            $("#operator")[0].selectedIndex = 0;
-            $("#colname").val("");
-            $("#ressugg").hide();
-          }
-          else {
-            bucket = ["State", "", "", "", "", ""];
-            $("#manual").slideDown();
-            $("#bot").hide();
-            $("#test").text("Change to Bot Mode");
-          }
-        });
 
         function CreateAnswer(RawData){
           var detail = [];
