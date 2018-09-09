@@ -180,7 +180,7 @@ def channel(data):
             ""])
 
 
-@app.route('/index')
+@app.route('/')
 def hello_world():
     col = columns
     state = list(file['State'].drop_duplicates().sort_index())
