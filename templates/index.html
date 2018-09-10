@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>LetsHack</title>
+  <title>Story Teller</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
@@ -38,7 +38,7 @@
 
   <script type="text/javascript" charset="utf-8">
 
-    var socket = io.connect('https://databender-story-teller.herokuapp.com');
+    var socket = io.connect('http://localhost:5000');
 
   </script>
 
@@ -47,16 +47,16 @@
 <body id="page-top">
 
   <nav class="navbar fixed-top navbar-dark bg-dark ">
-    <a class="navbar-brand mr-1" href="index.html">
-      <i class="fas fa-laptop-code"></i> LetsHack</a>
- 
-    
+    <a class="navbar-brand mr-1" href="index">
+      <i class="fas fa-laptop-code"></i> Story Teller</a>
+    <h4 type="button" id="test" class="btn btn-primary btn-md" id="toggle" style="position: absolute; right:2%;margin-top: 1px;">Change to Bot Mode</h4>
+
     <div class="navcustom nav-link " style="position: relative;">
-      </div>
+    </div>
   </nav>
-<br>
-<br>
-<br>
+  <br>
+  <br>
+  <br>
 
   <div id="wrapper">
     <div id="content-wrapper">
@@ -70,7 +70,7 @@
                 <div class="text-center m-1">
                   <h4>
                     <i class="fas fa-user"></i> Manual </h4>
-                  <p> You Can Choose Your Options Manualy to get Results.</p>
+
                 </div>
 
                 <form id="manualForm">
@@ -112,7 +112,7 @@
 
 
                   <div class="form-group" id="columns">
-                    <label for="exampleFormControlSelect2">Select Columns</label>
+                    <label for="exampleFormControlSelect2">Select Column 1</label>
                     <select name="f5[]" class="form-control" id="columns_sel">
                       <option value="" hidden> None</option>
 
@@ -126,7 +126,7 @@
                   </div>
                   <center>
                     <hr>
-                    <label for="">Column Name & Methods</label>
+                    <label for="">Custom Column Name & Method</label>
                     <div class="input-group">
                       <input type="text" class="form-control" placeholder="Column Name" id="colname" aria-label="Text input with dropdown button">
                       <div class="input-group-append">
@@ -142,7 +142,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                      <label for="">Select Columns</label>
+                      <label for="">Select Column 2</label>
                       <select name="f5[]" class="form-control" id="columns_sel2">
                         <option value="none" hidden> None</option>
                         {% for option in catagory[0] %}
@@ -156,7 +156,7 @@
                 </form>
               </div>
             </div>
-            <div class="card card-login " style="box-shadow: 3px 2px 6px #ebebe0" id="bot">
+            <div class="card card-login " style="box-shadow: 3px 2px 6px #ebebe0;position:fixed;" id="bot">
               <div class="text-center m-4">
                 <h4>
                   <i class="fas fa-robot"></i> LetsBot </h4>
@@ -167,49 +167,73 @@
                 <label for="bottext">
                   <i class="fas fa-robot"></i> Ask me Something...</label>
               </div>
-              <div class="text-center m-4" id="ressugg">
-                <h5>
-                  <i class="fas fa-robot"></i> -- If you meant some other parameter -- </h5>
-                <p> You can get Results with NLP Based Bot by Asking Him in your way.</p>
-              </div>
+
             </div>
           </div>
           <div class="col-8">
             <!-- Area Chart Example-->
             <div class="card " id="Description" style="box-shadow: 3px 2px 6px #ebebe0;margin-bottom:20px;">
               <div class="card-body charty-area">
-                  <div class="text-center m-1">
-                      <h3><i class="fas fa-check-circle text-success"></i> Result </h3>
-                      <h5><p id="Dpt"></p></h5>
-                    </div>
+                <div class="text-center m-1">
+                  <h3>
+                    <i class="fas fa-check-circle text-success"></i> Result </h3>
+                  <h5>
+                    <p id="Dpt"></p>
+                  </h5>
+                </div>
               </div>
             </div>
             <div class="card " id="error" style="box-shadow: 3px 2px 6px #ebebe0">
               <div class="card-body charty-area">
-                  <div class="text-center m-1">
-                      <h3><i class="fas fa-info-circle text-danger"></i> Not Available !</h3>     
-                      <h5><p> Sorry the Data you are Looking for is  <b>Not Available</b> on Dataset !</p></h5>
-                    </div>
+                <div class="text-center m-1">
+                  <h3>
+                    <i class="fas fa-info-circle text-danger"></i> Not Available !</h3>
+                  <h5>
+                    <p> Sorry the Data you are Looking for is
+                      <b>Not Available</b> on Dataset !</p>
+                  </h5>
+                </div>
               </div>
             </div>
             <div class="card " id="caution" style="box-shadow: 3px 2px 6px #ebebe0">
               <div class="card-body charty-area">
-                  <div class="text-center m-1">
-                      <h3><i class="fas fa-exclamation-triangle text-warning"></i> Bad Configration !</h3>     
-                      <h5><p> Please Check the Configration Again. You are missing Something.  </p></h5>
-                    </div>
+                <div class="text-center m-1">
+                  <h3>
+                    <i class="fas fa-exclamation-triangle text-warning"></i> Bad Configration !</h3>
+                  <h5>
+                    <p> Please Check the Configration Again. You are missing Something. </p>
+                  </h5>
+                </div>
               </div>
             </div>
-            
+            <div class="card " id="welcome" style="box-shadow: 3px 2px 6px #ebebe0">
+              <div class="card-body charty-area">
+                <div class="text-center m-1">
+                  <h3>
+                    <i class="fas fa-info-circle text-success"></i> Hello Citizen</h3>
+                  <h5>
+                    <p>
+                      <b>DataBender's</b> Story Teller aims to build a smart data analysis and visualization interface to make
+                      it really easy for users to discover patterns and meanings in their data, without diving into enormous
+                      datasets. </p>
+
+                    <p>
+
+                    </p>
+                  </h5>
+                </div>
+              </div>
+            </div>
+
             <div class="card mb-3 reschart" style="box-shadow: 3px 1px 6px #ebebe0">
-              <div class="card-body " >
-                <canvas id="myChart" width="80%" height="40"></canvas>      
+              <div class="card-body ">
+                <canvas id="myChart" width="80%" height="40"></canvas>
               </div>
             </div>
             <br>
             <div class="card mb-3" id="TableDiv">
               <div class="card-body" style="padding:0px;">
-                <div class="table-responsive" >
+                <div class="table-responsive">
                   <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                       <tr>
@@ -263,16 +287,38 @@
         $('#Description').hide();
 
 
+        var toggle = 0;
+        $("#test").click(function () {
+          if ($("#test").text() == "Change to Bot Mode") {
+            $("#bot").show();
+            $("#bottext").val("")
+            $("#manual").slideUp();
+            $("#test").text("Change to Manual Mode");
+            $("#exampleFormControlSelect1")[0].selectedIndex = 1;
+            $("#StateValue")[0].selectedIndex = 0;
+            $("#columns_sel")[0].selectedIndex = 0;
+            $("#columns_sel2")[0].selectedIndex = 0;
+            $("#operator")[0].selectedIndex = 0;
+            $("#colname").val("");
+            $("#ressugg").hide();
+          }
+          else {
+            bucket = ["State", "", "", "", "", ""];
+            $("#manual").slideDown();
+            $("#bot").hide();
+            $("#test").text("Change to Bot Mode");
+          }
+        });
 
-        function CreateAnswer(RawData){
+        function CreateAnswer(RawData) {
           var detail = [];
           var sum = 0;
           var total = RawData[0].length;
-          RawData[0].forEach(function(el)
-          {sum+=el;
+          RawData[0].forEach(function (el) {
+            sum += el;
           });
-          detail[0] = sum/total;
-          detail[1] = Math.max(...RawData[0]); 
+          detail[0] = sum / total;
+          detail[1] = Math.max(...RawData[0]);
           detail[2] = RawData[0].indexOf(Math.max(...RawData[0]));
           return detail;
         }
@@ -286,8 +332,8 @@
             )).draw(false);
           }
         }
+        $("#caution").hide();
         socket.on('connect', function () {
-
           console.log("connect");
         });
         $('.reschart').hide();
@@ -295,26 +341,29 @@
 
           var flag = "District"
           socket.on('reciever', function (data) {
+            console.log(data[2]);
+
             console.log(bucket);
             $('#myChart').remove();
             $('.reschart').append('<canvas id="myChart" width="80%" height="40"><canvas>');
-              $("#caution").hide();
+
             var ctxl = $("#myChart");
             console.log(data[0])
-              if( data[0] === "Bad Data" )
-              {
-                $("#caution").show();
-                $('#myChart').hide();
-                $('.reschart').hide();
-                $("#TableDiv").hide();
-              }
+            if (data[0] === "Bad Data") {
+              $("#caution").show();
+              $('#myChart').hide();
+              $('#welcome').hide();
+              $('.reschart').hide();
+              $("#TableDiv").hide();
+            }
             else if (typeof (data[0]) == typeof ("1.0")) {
               $('#Description').show();
               var str = data[2].split("|");
-              $('#Dpt').html('<b>'+str[0]+'</b> in '+str[1].toLowerCase()+' <b>'+str[2]+'</b> is <b>'+data[0]+'</b>.');
+              $('#Dpt').html('<b>' + str[0] + '</b> in ' + str[1].toLowerCase() + ' <b>' + str[2] + '</b> is <b>' + data[0] + '</b>.');
               console.log(data);
               $("#error").hide();
               $("#TableDiv").hide();
+              $('#welcome').hide();
               $('.reschart').hide();
             }
             else {
@@ -323,6 +372,7 @@
                 $("#error").show();
                 $("#caution").hide();
                 $('.reschart').hide();
+                $('#welcome').hide();
                 $('#myChart').hide();
                 $("#TableDiv").hide();
               }
@@ -331,16 +381,24 @@
                 $("#caution").hide();
                 $(".reschart").show();
                 var str = data[2].split("|");
-                if( str!="dummy" )
-                {
+                if (str != "dummy") {
                   $('#Description').show();
-                  console.log("asasa ::: "+str);
+                  console.log("asasa ::: " + str);
                   var de = CreateAnswer(data);
                   console.log(de);
-                  $('#Dpt').html('<b>'+str[0]+'</b> in '+str[1].toLowerCase()+' <b>'+str[2]+'</b> is Around <b>'+de[0].toFixed(3)+'</b> and <b>'+data[1][de[2]]+'</b> District Has the Maximum Value which is <b>'+de[1])+'</b>';
+                  $('#Dpt').html('<b>' + str[0] + '</b> in ' + str[1].toLowerCase() + ' <b>' + str[2] + '</b> is Around <b>' + de[0].toFixed(3) + '</b> and <b>' + data[1][de[2]] + '</b> District Has the Maximum Value which is <b>' + de[1]) + '</b>';
                 }
                 CreateTable(data);
                 $("#TableDiv").show();
+                if (data[2] === "dummy") {
+                  $('#myChart').hide();
+                  $('.reschart').hide();
+                  $('#welcome').show();
+                  $("#TableDiv").hide();
+                }
+                else {
+                  $('#welcome').hide();
+                }
                 var myChart = new Chart(ctxl, CreateChart(data));
               }
             }
@@ -471,17 +529,16 @@
         });
 
 
-        var f = 3;
+
         $("#bottext").keypress(function () {
-          if ($(this).val().split(" ").length >= f) {
-            f++;
+          if ($(this).val().split(" ").length >= 2) {
+
             socket.emit('channel', $(this).val());
             $("#ressugg").show();
           }
-          if ($(this).val().split(" ").length <= 3) {
-            f = 3;
 
-          }
+
+
         });
 
         function CreateChart(data) {
